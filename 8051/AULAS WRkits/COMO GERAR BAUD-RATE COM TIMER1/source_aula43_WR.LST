@@ -1,0 +1,64 @@
+8051 Assembler           Version 1.00   03/23/116 20:36:10    Page 1
+C:\You Tube - Meu Canal\07 Assembly 8051\Assembly_8051_043_Programando_a_Serial\8051_WR_files_043\source_aula43_WR.a51
+
+
+
+    1 0000              ;
+    2 0000              ;   Curso de Assembly para 8051 WR Kits
+    3 0000              ;
+    4 0000              ;   Aula 43 - Exemplo de programação da Serial. 
+    5 0000              ;   
+    6 0000              ;  
+    7 0000              ;
+    8 0000              ;   MCU: AT89S51    Clock: 12MHz    Ciclo de Máquina: 1µs
+    9 0000              ;
+   10 0000              ;  
+   11 0000              ;   Sistema Sugerido: PARADOXUS 8051
+   12 0000              ;
+   13 0000              ;   Disponível a venda em https://wrkits.com.br/catalog/show/140
+   14 0000              ;
+   15 0000              ;
+   16 0000              ; www.wrkits.com.br | facebook.com/wrkits | youtube.com/user/canalwrkits
+   17 0000              ;
+   18 0000              ;   Autor: Eng. Wagner Rambo   |   Data: Março de 2016
+   19 0000              ;
+   20 0000              ;
+   21 0000              
+   22 0000              ; --- Vetor de RESET ---
+   23 0000                      org     0000h           ;origem no endereço 00h de memória
+   24 0000 8023                 sjmp    inicio          ;desvia dos vetores de interrupção
+   25 0002              
+   26 0002              
+   27 0002              ; --- Vetor de Interrupção Serial ---
+   28 0023                      org     0023h           ;interrupção serial aponta para este endereço
+   29 0023 8010                 sjmp    ser             ;desvia para o endereço da rotina de interrupção
+   30 0025              
+   31 0025              
+   32 0025              ; --- Programa Principal ---
+   33 0025              inicio:
+   34 0025              
+   35 0025 758920               mov     TMOD,#00100000b ;Timer1 no modo 2
+   36 0028 758DF4               mov     TH1,#0F4h       ;Timer1 configurado para gerar baud rate de 2400
+   37 002B D28E                 setb    TR1             ;Liga Timer1
+   38 002D 75A890               mov     IE,#90h         ;Habilita interrupção Serial
+   39 0030 759850               mov     SCON,#01010000b ;Serial no Modo 1, liberando o bit REN
+   40 0033              
+   41 0033              
+   42 0033 80FE                 sjmp    $               ;Loop infinito
+   43 0035              
+   44 0035              
+   45 0035              ; --- Rotina de tratamento da Interrupção ---
+   46 0035              ser:
+   47 0035              
+   48 0035 E599                 mov     a,SBUF          ;Lê o conteúdo de SBUF e carrega em acc
+   49 0037 C298                 clr     RI              ;limpa bit de interrupção
+   50 0039 32                   reti                    ;retorna da rotina de interrupção
+   51 003A              
+   52 003A              
+   53 003A                      end                     ;Final do programa
+
+Defined Symbols:
+
+Defined Labels:
+  INICIO                                    000025  37
+  SER                                       000035  53

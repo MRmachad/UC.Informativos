@@ -1,0 +1,19 @@
+,,,;
+,,,; Exemplo de direcionamento indireto
+,,,;
+,,,; Curso de microcontroladores 8051
+,,,;
+,,,; Wagner Rambo Julho de 2015
+,,,;
+,,,
+,,,                org             0000h                   ;Origem no endereço 00h de memória
+,,,
+0000,,inicio,inicio:
+,,,
+0000,75 28 BB,,                mov             28h,#0bbh               ;Direcionamento imediato / move o conteúdo(o
+0003,79 28,,                mov             r1,#28h                 ; r1 atua como um ponteiro para dados e apon
+0005,E7,,                mov             a,@r1                   ; a = bbh
+,,,
+0006,01 06,,                ajmp            $                       ;segura o código nesta linha
+,,,
+000E,,,                end                                     ;final do programa

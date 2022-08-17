@@ -1,0 +1,60 @@
+8051 Assembler           Version 1.00   10/30/115 18:32:38    Page 1
+C:\You Tube - Meu Canal\07 Assembly 8051\Assembly_8051_022_Interrupção_Externa_INT0\8051_WR_files_022\source_aula22_WR.a51
+
+
+
+    1 0000              ;
+    2 0000              ;  Curso de Assembly para 8051 WR Kits
+    3 0000              ;
+    4 0000              ;  Aula 22 - Utilizando a Interrupção Externa INT0 
+    5 0000              ;
+    6 0000              ; Deseja-se programar o serviço de interrupção externa no INT0 para o microcontrolador AT89S51:
+    7 0000              ;
+    8 0000              ; - INT0 em baixa prioridade, sensível à borda 
+    9 0000              ; - Quando houver borda de descida complementar o PORT0 no serviço de interrupção
+   10 0000              ;
+   11 0000              ; www.wrkits.com.br | facebook.com/wrkits | youtube.com/user/canalwrkits
+   12 0000              ;
+   13 0000              ; Autor: Eng. Wagner Rambo   |   Data: Outubro de 2015
+   14 0000              ;
+   15 0000              
+   16 0000               ; --- Vetor da RESET ---
+   17 0000               
+   18 0000                       org     0000h           ;origem no endereço 0000h de memória
+   19 0000 0107                  ajmp    inicio          ;desvia das interrupções
+   20 0002               
+   21 0002               ; --- Rotina de Interrupção INT0 ---
+   22 0002               
+   23 0003                       org     0003h           ;endereço da interrupção do INT0
+   24 0003 F4                    cpl     a               ;complementa acc
+   25 0004 F580                  mov     P0,a            ;move conteúdo do acumulador para PORT P0
+   26 0006                       
+   27 0006 32                    reti                    ;retorna da interrupção
+   28 0007              
+   29 0007               
+   30 0007               ; --- Final das Rotinas de Interrupção ---
+   31 0007               
+   32 0007               
+   33 0007               ; --- Configurações Iniciais ---
+   34 0007               inicio:
+   35 0007 7400                  mov     a, #00h         ;move constante 00h para acc
+   36 0009 F580                  mov     P0,a            ;configura PORT P0 como saída
+   37 000B 74FF                  mov     a,#0FFh         ;move constante FFh para acc
+   38 000D F580                  mov     P0,a            ;inicializa PORT P0
+   39 000F 7481                  mov     a,#10000001b    ;move a constante 10000001b para acc
+   40 0011 F5A8                  mov     ie,a            ;Habilita interrupção INT0
+   41 0013 7400                  mov     a,#00000000b    ;move a constante 00000000b para acc
+   42 0015 F5B8                  mov     ip,a            ;INT0 como baixa prioridade
+   43 0017 7401                  mov     a,#00000001b    ;move a constante 00000001b para acc
+   44 0019 F588                  mov     tcon,a          ;INT0 como sensível à borda
+   45 001B 743C                  mov     a,#3Ch          ;move constante 3Ch (0011 1100 b) para acc
+   46 001D              
+   47 001D 011D                  ajmp    $               ;Loop
+   48 001F              
+   49 001F              
+   50 001F                       end                     ;Final do programa 
+
+Defined Symbols:
+
+Defined Labels:
+  INICIO                                    000007  7

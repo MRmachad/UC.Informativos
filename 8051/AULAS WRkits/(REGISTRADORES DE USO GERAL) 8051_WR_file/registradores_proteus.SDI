@@ -1,0 +1,16 @@
+,,,;
+,,,;  Registradores no Proteus
+,,,;
+,,,
+,,,
+,,,                org             0000h
+,,,
+0000,,inicio,inicio:
+,,,
+0000,7B 0B,,                mov             r3,#0bh
+0002,EB,,                mov             a,r3
+0003,F8,,                mov             r0,a
+,,,
+0004,01 04,,                ajmp            $
+,,,
+000E,,,                end

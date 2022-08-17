@@ -1,0 +1,54 @@
+,,,;
+,,,; CUrso de Assembly para 8051 WR Kits
+,,,;
+,,,; Aula 10: Acessando Dados de um Banco
+,,,;
+,,,; Eng. Wagner Rambo
+,,,;
+,,,; Agosto de 2015
+,,,;
+,,,
+,,,; --- Vetor de RESET ---
+,,,        org     0000h           ;Origem no endereço 00h de memória
+0000,78 00,,        mov     r0,#0d          ;Move a constante 0 para r0
+0002,90 00 0F,,        mov     dptr,#banco     ;Endereço inicial do banco para dptr
+,,,
+,,,; --- Rotina Principal ---
+0005,,princ,princ:
+0005,E8,,        mov     a,r0            ;Move o conteúdo de r0 para acc
+0006,93,,        movc    a,@a+dptr       ;Move o byte relativo de dptr somado
+,,,                                ;com o valor de acc para o acc
+0007,F5 80,,        mov     p0,a            ;Move o conteúdo de acc para Port0
+0009,08,,        inc     r0              ;Incrementa r0
+000A,B8 08 F8,,        cjne    r0,#8d,princ    ;Compara r0 com 0 e pula se não for igual
+000D,01 0D,,        ajmp    $               ;Segura o código nesta linha
+,,,
+,,,; --- Banco ---
+000F,,banco,banco:
+000F,01,,        db      01h             ; 00000001b
+0010,02,,        db      02h             ; 00000010b
+0011,04,,        db      04h             ; 00000100b
+0012,08,,        db      08h             ; 00001000b
+0013,10,,        db      10h             ; 00010000b
+0014,20,,        db      20h             ; 00100000b
+0015,40,,        db      40h             ; 01000000b
+0016,80,,        db      80h             ; 10000000b
+,,,
+000E,,,        end                     ;Final do programa
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,
+,,,

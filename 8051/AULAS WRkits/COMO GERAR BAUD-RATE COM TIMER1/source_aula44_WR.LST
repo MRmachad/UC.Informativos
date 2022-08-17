@@ -1,0 +1,65 @@
+8051 Assembler           Version 1.00   03/31/116 18:35:40    Page 1
+C:\You Tube - Meu Canal\07 Assembly 8051\Assembly_8051_044_Como_Gerar_Baud_Rate_com_Timer1\8051_WR_files_044\source_aula44_WR.a51
+
+
+
+    1 0000              ;
+    2 0000              ;   Curso de Assembly para 8051 WR Kits
+    3 0000              ;
+    4 0000              ;   Aula 44 - Como Gerar Baud Rate com Timer1
+    5 0000              ;   
+    6 0000              ;  
+    7 0000              ;
+    8 0000              ;   MCU: AT89S51    Clock: 12MHz    Ciclo de Máquina: 1µs
+    9 0000              ;
+   10 0000              ;  
+   11 0000              ;   Sistema Sugerido: PARADOXUS 8051
+   12 0000              ;
+   13 0000              ;   Disponível a venda em https://wrkits.com.br/catalog/show/140
+   14 0000              ;
+   15 0000              ;
+   16 0000              ; www.wrkits.com.br | facebook.com/wrkits | youtube.com/user/canalwrkits
+   17 0000              ;
+   18 0000              ;   Autor: Eng. Wagner Rambo   |   Data: Abril de 2016
+   19 0000              ;
+   20 0000              ;
+   21 0000              
+   22 0000              ; --- Vetor de RESET ---
+   23 0000                      org     0000h           ;origem no endereço 00h de memória
+   24 0000 8023                 sjmp    inicio          ;desvia dos vetores de interrupção
+   25 0002              
+   26 0002              
+   27 0002              ; --- Vetor de Interrupção Serial ---
+   28 0023                      org     0023h           ;interrupção serial aponta para este endereço
+   29 0023 8013                 sjmp    ser             ;desvia para o endereço da rotina de interrupção
+   30 0025              
+   31 0025              
+   32 0025              ; --- Programa Principal ---
+   33 0025              inicio:
+   34 0025              
+   35 0025 758920               mov     TMOD,#00100000b ;Timer1 no modo 2
+   36 0028 758780               mov     PCON,#10000000b ;
+   37 002B 758DFA               mov     TH1,#0FAh       ;Timer1 configurado para gerar baud rate de 9600
+   38 002E D28E                 setb    TR1             ;Liga Timer1
+   39 0030 75A890               mov     IE,#90h         ;Habilita interrupção Serial
+   40 0033 759850               mov     SCON,#01010000b ;Serial no Modo 1, liberando o bit REN
+   41 0036              
+   42 0036              
+   43 0036 80FE                 sjmp    $               ;Loop infinito
+   44 0038              
+   45 0038              
+   46 0038              ; --- Rotina de tratamento da Interrupção ---
+   47 0038              ser:
+   48 0038              
+   49 0038 E599                 mov     a,SBUF          ;Lê o conteúdo de SBUF e carrega em acc
+   50 003A C298                 clr     RI              ;limpa bit de interrupção
+   51 003C 32                   reti                    ;retorna da rotina de interrupção
+   52 003D              
+   53 003D              
+   54 003D                      end                     ;Final do programa
+
+Defined Symbols:
+
+Defined Labels:
+  INICIO                                    000025  37
+  SER                                       000038  56

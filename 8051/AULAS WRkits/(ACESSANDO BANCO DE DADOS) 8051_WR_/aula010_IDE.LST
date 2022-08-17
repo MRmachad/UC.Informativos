@@ -1,0 +1,48 @@
+8051 Assembler           Version 1.00   08/07/115 19:35:45    Page 1
+C:\You Tube - Meu Canal\ZZZ Assembly 8051\Assembly_8051_010_Acessando_Dados_de_um_Banco\8051_WR_files_010\aula010_IDE.a51
+
+
+
+    1 0000              ;
+    2 0000              ; Curso de Assembly para 8051 WR Kits
+    3 0000              ;
+    4 0000              ; Aula 10: Acessando Dados de um Banco
+    5 0000              ;
+    6 0000              ; Eng. Wagner Rambo
+    7 0000              ;
+    8 0000              ; Agosto de 2015
+    9 0000              ;
+   10 0000              
+   11 0000              ; --- Vetor de RESET ---
+   12 0000                      org     0000h           ;Origem no endereço 00h de memória
+   13 0000 7800                 mov     r0,#0d          ;Move a constante 8 para r0
+   14 0002 90000F               mov     dptr,#banco     ;Move um dos dados do banco para dptr
+   15 0005              
+   16 0005              ; --- Rotina Principal ---
+   17 0005              princ:
+   18 0005 E8                   mov     a,r0            ;Move o conteúdo de r0 para o acc
+   19 0006 93                   movc    a,@a+dptr       ;Move o byte relativo de dptr somado
+   20 0007                                              ;com o valor de acc para o acc
+   21 0007 F580                 mov     p0,a            ;Move o conteúdo de acc para Port0
+   22 0009 08                   inc     r0              ;Incrementa r0
+   23 000A B808F8               cjne    r0,#8d,princ    ;Compara r0 com 0 e pula se não for igual
+   24 000D 010D                 ajmp    $               ;Segura o código nesta linha
+   25 000F              
+   26 000F              ; --- Banco ---
+   27 000F              banco:
+   28 000F 01                   db      01h             ; 00000001b
+   29 0010 02                   db      02h             ; 00000010b
+   30 0011 04                   db      04h             ; 00000100b
+   31 0012 08                   db      08h             ; 00001000b
+   32 0013 10                   db      10h             ; 00010000b
+   33 0014 20                   db      20h             ; 00100000b
+   34 0015 40                   db      40h             ; 01000000b
+   35 0016 80                   db      80h             ; 10000000b
+   36 0017              
+   37 0017                      end                     ;Final do Programa
+
+Defined Symbols:
+
+Defined Labels:
+  BANCO                                     00000F  15
+  PRINC                                     000005  5

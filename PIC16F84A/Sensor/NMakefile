@@ -1,0 +1,19 @@
+# MPLAB IDE generated this makefile for use with Microsoft `nmake'.
+# Project: Senso.mcp
+# Date: Tue Feb 11 07:10:03 2020
+
+AS = MPASMWIN.exe
+CC = 
+LD = mplink.exe
+AR = mplib.exe
+RM = del
+
+"Senso.cof" : "Senso.o"
+	$(CC) /p16F84A "Senso.o" /u_DEBUG /z__MPLAB_BUILD=1 /z__MPLAB_DEBUG=1 /o"Senso.cof" /M"Senso.map" /W /x
+
+"Senso.o" : "Senso.asm" "..\..\..\..\..\..\Program Files (x86)\Microchip\MPASM Suite\p16f84a.inc"
+	$(AS) /q /p16F84A "Senso.asm" /l"Senso.lst" /e"Senso.err" /d__DEBUG=1
+
+"clean" : 
+	$(CC) "Senso.o" "Senso.hex" "Senso.err" "Senso.lst" "Senso.cof"
+

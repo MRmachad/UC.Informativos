@@ -1,0 +1,33 @@
+8051 Assembler           Version 1.00   07/11/115 15:37:58    Page 1
+C:\You Tube - Meu Canal\ZZZ Assembly 8051\Assembly_8051_006_Registradores_de_Uso_Geral\8051_WR_files_006\registradores_de_uso_geral.a51
+
+
+
+    1 0000              ; 
+    2 0000              ;  Aula 006
+    3 0000              ;
+    4 0000              ; Registradores de Uso Geral
+    5 0000              ;
+    6 0000              ; Eng. Wagner Rambo
+    7 0000              ;
+    8 0000              ;
+    9 0000              
+   10 0000                              org             0000h                   ;Origem no endereço 0h
+   11 0000              
+   12 0000              inicio:
+   13 0000              
+   14 0000 790F                         mov             r1,#0fh                 ;Move a constante 0fh para R1
+   15 0002 E9                           mov             a,r1                    ;Move o conteúdo de r1 para o acc
+   16 0003 FD                           mov             r5,a                    ;Move o conteúdo do acumulador para r5
+   17 0004 0D                           inc             r5                      ;Incrementa r5 em 1. r5 = r5 + 1, r5++
+   18 0005 0D                           inc             r5
+   19 0006 0D                           inc             r5
+   20 0007              
+   21 0007 0107                         ajmp            $                       ;Segura o código nesta linha
+   22 0009              
+   23 0009                              end                                     ;Final do programa
+
+Defined Symbols:
+
+Defined Labels:
+  INICIO                                    000000  0

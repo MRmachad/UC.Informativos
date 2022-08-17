@@ -1,0 +1,333 @@
+MPASM  5.51                         SENSO.ASM   2-11-2020  7:20:30         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 ;
+                      00002 ; Curso de Assembly para PIC Aula 009
+                      00003 ;
+                      00004 ; Aciona LED1 ligado em RB1 e apaga LED2 ligado em RB3
+                      00005 ; aguarda 500 milissegundos
+                      00006 ; Aciona LED2 ligado em RB3 e apaga LED1 ligado em RB1
+                      00007 ; aguarda 500 milissegundos
+                      00008 ;
+                      00009 ;
+                      00010 ; OBS.:
+                      00011 ;
+                      00012 ; LEDs ligados no modo current sourcing:
+                      00013 ;
+                      00014 ; '0' - apaga
+                      00015 ; '1' - acende
+                      00016 ;
+                      00017 ; Cálculo do Ciclo de Máquina:
+                      00018 ;
+                      00019 ; Ciclo de máquina = 1/(Freq Cristal / 4) = 1us
+                      00020 ;
+                      00021 ;  
+                      00022 ;  
+                      00023 ;  
+                      00024 ;
+                      00025 ; MCU: PIC16F84A   Clock: 4MHz
+                      00026 ;
+                      00027 ; www.wrkits.com.br | facebook.com/wrkits | youtube.com/canalwrkits
+                      00028 ;
+                      00029 ; Autor: Eng. Wagner Rambo   Data: Janeiro de 2016
+                      00030 ;
+                      00031 
+                      00032 
+                      00033  list           p=16f84A                                                        ; microcontrolador utili
+                            zado PIC16F84A
+                      00034   
+                      00035   
+                      00036 ; --- Arquivos incluídos no projeto ---
+                      00037  #include <p16f84a.inc>                                                 ; inclui o arquivo do PIC16F84A 
+                             
+                      00001         LIST
+                      00002 
+                      00003 ;==========================================================================
+                      00004 ;  MPASM PIC16F84A processor include
+                      00005 ; 
+                      00006 ;  (c) Copyright 1999-2013 Microchip Technology, All rights reserved
+                      00007 ;==========================================================================
+                      00008 
+                      00208         LIST
+                      00038   
+                      00039   
+                      00040 ; --- FUSE Bits ---
+                      00041 ; Cristal oscilador externo 4MHz, sem watchdog timer, com power up timer, sem proteção do código
+2007   3FF1           00042  __config _XT_OSC & _WDT_OFF & _PWRTE_ON & _CP_OFF
+MPASM  5.51                         SENSO.ASM   2-11-2020  7:20:30         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00043         
+                      00044 
+                      00045 ; --- Paginação de Memória ---
+                      00046  #define                bank0           bcf     STATUS,RP0              ;Cria um mnemônico para o banco 
+                            0 de memória
+                      00047  #define                bank1           bsf STATUS,RP0          ;Cria um mnemônico para o banco 1 de mem
+                            ória
+                      00048  
+                      00049 
+                      00050 ; --- Entradas ---
+                      00051  #define                eco             PORTB,RB0                       ;botão 1 ligado em RB0
+                      00052 
+                      00053  
+                      00054  
+                      00055 ; --- Saídas ---
+                      00056  #define                triger          PORTB,RB1                       ; 1 ligado em RB1
+                      00057  
+                      00058 ; variaveis
+                      00059  
+                      00060  cblock                 H'0C'                                                   ;inicio da memória do us
+                            uário
+                      00061  
+  0000000C            00062  regist1                                                                                ;registrador aux
+                            iliar
+  0000000D            00063  regist2        
+  0000000E            00064  aux
+  0000000F            00065  aux2
+                      00066  endc    
+                      00067                              
+                      00068 ; --- Vetor de RESET ---
+0000                  00069                                 org                     H'0000'                         ;Origem no ender
+                            eço 0000h de memória
+0000   2805           00070                                 goto            inicio                          ;Desvia do vetor de inte
+                            rrupção
+                      00071                                 
+                      00072 ; --- Vetor de Interrupção ---
+0004                  00073                                 org                     H'0004'                         ;Todas as interr
+                            upções apontam para este endereço
+0004   0009           00074                                 retfie                                                  ;Retorna de inte
+                            rrupção
+                      00075                                 
+                      00076 
+                      00077 ; --- Programa Principal ---                            
+0005                  00078 inicio:
+0005   1683           00079                                 bank1                                                   ;seleciona o ban
+                            co 1 de memória
+0006   30FF           00080                                 movlw           H'FF'                           ;W = B'11111111'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0007   0085           00081                                 movwf           TRISA                           ;TRISA = H'FF' (todos os
+                             bits são entrada)
+0008   30FD           00082                                 movlw           H'FD'                           ;W = B'11111101'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0009   0086           00083                                 movwf           TRISB                           ;TRISB = H'F5' configura
+MPASM  5.51                         SENSO.ASM   2-11-2020  7:20:30         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                             RB1 e RB3 como saída
+000A   1283           00084                                 bank0                                                   ;seleciona o ban
+                            co 0 de memória (padrão do RESET)
+000B   30F8           00085                                 movlw           H'F8'                           ;W = B'11110100'
+000C   0086           00086                                 movwf           PORTB                           ;tigyer em 0 iniciam des
+                            ligados
+                      00087                                 
+000D                  00088 loop:                                                                                   ;Loop infinito
+                      00089 
+000D   1486           00090                                 bsf                     triger
+000E   201D           00091                                 call            delay10us                       ;chama sub rotina
+000F   1086           00092                                 bcf                     triger
+                      00093                         
+0010   2811           00094                                 goto            contagem                                ;volta para labe
+                            l loop
+                      00095                                 
+                      00096                                 
+                      00097                                 
+                      00098 ; --- Desenvolvimento das Sub-Rotinas ---
+                      00099 
+0011                  00100 contagem:
+0011   1C06           00101                                 btfss           eco     
+0012   2815           00102                                 goto            loop1
+0013   0A0C           00103                                 incf            regist1,w
+0014   2811           00104                                 goto            contagem
+                      00105                                 
+0015                  00106 loop1:
+                      00107                 
+0015   303A           00108                                 movlw           D'58'
+0016   2018           00109                                 call            contagem2
+                      00110                                 
+0017   280D           00111                                 goto            loop
+                      00112                                 
+0018                  00113 contagem2:
+0018   020C           00114                                 subwf           regist1,C               
+0019   1803           00115                                 btfsc           STATUS,C
+001A   0008           00116                                 return
+001B   0A0D           00117                                 incf            regist2,C
+001C   2818           00118                                 goto            contagem2
+                      00119                                 
+                      00120                                 
+001D                  00121 delay10us:
+001D   0000           00122                                 nop     
+001E   0000           00123                                 nop
+001F   0000           00124                                 nop
+0020   0000           00125                                 nop
+0021   0000           00126                                 nop     
+0022   0000           00127                                 nop
+                      00128                         
+                      00129                                 
+0023   0008           00130                                 return
+                      00131                                                 
+                      00132                                 end                                                             ;Final d
+MPASM  5.51                         SENSO.ASM   2-11-2020  7:20:30         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                            o programa
+MPASM  5.51                         SENSO.ASM   2-11-2020  7:20:30         PAGE  5
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+C                                 00000000
+DC                                00000001
+EEADR                             00000009
+EECON1                            00000088
+EECON2                            00000089
+EEDATA                            00000008
+EEIE                              00000006
+EEIF                              00000004
+F                                 00000001
+FSR                               00000004
+GIE                               00000007
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+NOT_PD                            00000003
+NOT_RBPU                          00000007
+NOT_TO                            00000004
+OPTION_REG                        00000081
+PCL                               00000002
+PCLATH                            0000000A
+PORTA                             00000005
+PORTB                             00000006
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+RA0                               00000000
+RA1                               00000001
+RA2                               00000002
+RA3                               00000003
+RA4                               00000004
+RB0                               00000000
+RB1                               00000001
+RB2                               00000002
+RB3                               00000003
+RB4                               00000004
+RB5                               00000005
+RB6                               00000006
+RB7                               00000007
+RBIE                              00000003
+RBIF                              00000000
+RD                                00000000
+RP0                               00000005
+RP1                               00000006
+STATUS                            00000003
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+TMR0                              00000001
+MPASM  5.51                         SENSO.ASM   2-11-2020  7:20:30         PAGE  6
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TMR0IE                            00000005
+TMR0IF                            00000002
+TRISA                             00000085
+TRISA0                            00000000
+TRISA1                            00000001
+TRISA2                            00000002
+TRISA3                            00000003
+TRISA4                            00000004
+TRISB                             00000086
+TRISB0                            00000000
+TRISB1                            00000001
+TRISB2                            00000002
+TRISB3                            00000003
+TRISB4                            00000004
+TRISB5                            00000005
+TRISB6                            00000006
+TRISB7                            00000007
+W                                 00000000
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+Z                                 00000002
+_CONFIG                           00002007
+_CP_OFF                           00003FFF
+_CP_ON                            0000000F
+_DEVID1                           00002006
+_FOSC_EXTRC                       00003FFF
+_FOSC_HS                          00003FFE
+_FOSC_LP                          00003FFC
+_FOSC_XT                          00003FFD
+_HS_OSC                           00003FFE
+_IDLOC0                           00002000
+_IDLOC1                           00002001
+_IDLOC2                           00002002
+_IDLOC3                           00002003
+_LP_OSC                           00003FFC
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDTE_OFF                         00003FFB
+_WDTE_ON                          00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_XT_OSC                           00003FFD
+__16F84A                          00000001
+__DEBUG                           1
+aux                               0000000E
+aux2                              0000000F
+bank0                             bcf     STATUS,RP0
+bank1                             bsf STATUS,RP0
+contagem                          00000011
+contagem2                         00000018
+delay10us                         0000001D
+MPASM  5.51                         SENSO.ASM   2-11-2020  7:20:30         PAGE  7
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+eco                               PORTB,RB0
+inicio                            00000005
+loop                              0000000D
+loop1                             00000015
+regist1                           0000000C
+regist2                           0000000D
+triger                            PORTB,RB1
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : X---XXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXX------------ ----------------
+2000 : -------X-------- ---------------- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:    33
+Program Memory Words Free:   991
+
+
+Errors   :     0
+Warnings :     0 reported,     0 suppressed
+Messages :     2 reported,     0 suppressed
+
+
